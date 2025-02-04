@@ -28,6 +28,13 @@ jobs:
         if [ -f requirements.txt ]; then pip install -r requirements.txt; fi
         if [ -f requirements-dev.txt ]; then pip install -r requirements-dev.txt; fi
     
+    - name: Debug Info
+      run: |
+        pwd
+        ls -la
+        ls -la tests/
+        python -c "import sys; print(sys.path)"
+    
     - name: Lint with flake8
       run: |
         flake8 . --count --select=E9,F63,F7,F82 --show-source --statistics
@@ -35,7 +42,7 @@ jobs:
     
     - name: Run tests
       run: |
-        python -m pytest tests/ -v --cov=app
+        PYTHONPATH=$PYTHONPATH:$(pwd) python -m pytest tests/ -v --cov=app
 
   build-and-push:
     needs: test
